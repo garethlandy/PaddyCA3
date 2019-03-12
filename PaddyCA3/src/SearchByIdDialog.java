@@ -30,7 +30,7 @@ public class SearchByIdDialog extends JDialog implements ActionListener {
 		setTitle("Search by Surname");
 		setModal(true);
 		this.parent = parent;
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
 
 		JScrollPane scrollPane = new JScrollPane(searchPane());
 		setContentPane(scrollPane);

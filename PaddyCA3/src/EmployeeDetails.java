@@ -153,7 +153,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchByIdField.addActionListener(this);
 		searchByIdField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(searchId = new JButton(new ImageIcon(
-				new ImageIcon("imgres.png").getImage().getScaledInstance(35, 20, java.awt.Image.SCALE_SMOOTH))),
+				new ImageIcon("image/search.png").getImage().getScaledInstance(35, 20, java.awt.Image.SCALE_SMOOTH))),
 				"width 35:35:35, height 20:20:20, growx, pushx, wrap");
 		searchId.addActionListener(this);
 		searchId.setToolTipText("Search Employee By ID");
@@ -163,7 +163,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchBySurnameField.addActionListener(this);
 		searchBySurnameField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(
-				searchSurname = new JButton(new ImageIcon(new ImageIcon("imgres.png").getImage()
+				searchSurname = new JButton(new ImageIcon(new ImageIcon("image/search.png").getImage()
 						.getScaledInstance(35, 20, java.awt.Image.SCALE_SMOOTH))),
 				"width 35:35:35, height 20:20:20, growx, pushx, wrap");
 		searchSurname.addActionListener(this);
@@ -178,25 +178,25 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 		navigPanel.setBorder(BorderFactory.createTitledBorder("Navigate"));
 		navigPanel.add(first = new JButton(new ImageIcon(
-				new ImageIcon("first.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
+				new ImageIcon("image/first.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
 		first.setPreferredSize(new Dimension(17, 17));
 		first.addActionListener(this);
 		first.setToolTipText("Display first Record");
 
-		navigPanel.add(previous = new JButton(new ImageIcon(new ImageIcon("previous.png").getImage()
+		navigPanel.add(previous = new JButton(new ImageIcon(new ImageIcon("image/prev.png").getImage()
 				.getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
 		previous.setPreferredSize(new Dimension(17, 17));
 		previous.addActionListener(this);
 		previous.setToolTipText("Display next Record");
 
 		navigPanel.add(next = new JButton(new ImageIcon(
-				new ImageIcon("next.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
+				new ImageIcon("image/next.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
 		next.setPreferredSize(new Dimension(17, 17));
 		next.addActionListener(this);
 		next.setToolTipText("Display previous Record");
 
 		navigPanel.add(last = new JButton(new ImageIcon(
-				new ImageIcon("last.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
+				new ImageIcon("image/last.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
 		last.setPreferredSize(new Dimension(17, 17));
 		last.addActionListener(this);
 		last.setToolTipText("Display last Record");
@@ -358,39 +358,47 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 			new SearchBySurnameDialog(EmployeeDetails.this);
 	}// end displaySearchBySurnameDialog
 
+	public void openfile(){
+		application.openReadFile(file.getAbsolutePath());		
+	}
+	
+	public void readRecords() {
+		currentEmployee = application.readRecords(currentByteStart);
+	}
+	
 	// find byte start in file for first active record
 	private void firstRecord() {
 		// if any active record in file look for first record
 		if (isSomeoneToDisplay()) {
 			// open file for reading
-			application.openReadFile(file.getAbsolutePath());
+			openfile();
 			// get byte start in file for first record
 			currentByteStart = application.getFirst();
 			// assign current Employee to first record in file
-			currentEmployee = application.readRecords(currentByteStart);
+			readRecords();
 			application.closeReadFile();// close file for reading
 			// if first record is inactive look for next record
 			if (currentEmployee.getEmployeeId() == 0)
 				nextRecord();// look for next record
 		} // end if
-	}// end firstRecord
+	}// end firstRecord		
 
 	// find byte start in file for previous active record
 	private void previousRecord() {
 		// if any active record in file look for first record
 		if (isSomeoneToDisplay()) {
 			// open file for reading
-			application.openReadFile(file.getAbsolutePath());
+			openfile();
 			// get byte start in file for previous record
 			currentByteStart = application.getPrevious(currentByteStart);
 			// assign current Employee to previous record in file
-			currentEmployee = application.readRecords(currentByteStart);
+			readRecords();
 			// loop to previous record until Employee is active - ID is not 0
 			while (currentEmployee.getEmployeeId() == 0) {
 				// get byte start in file for previous record
 				currentByteStart = application.getPrevious(currentByteStart);
 				// assign current Employee to previous record in file
-				currentEmployee = application.readRecords(currentByteStart);
+				readRecords();
 			} // end while
 			application.closeReadFile();// close file for reading
 		}
@@ -401,17 +409,17 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// if any active record in file look for first record
 		if (isSomeoneToDisplay()) {
 			// open file for reading
-			application.openReadFile(file.getAbsolutePath());
+			openfile();
 			// get byte start in file for next record
 			currentByteStart = application.getNext(currentByteStart);
 			// assign current Employee to record in file
-			currentEmployee = application.readRecords(currentByteStart);
+			readRecords();
 			// loop to previous next until Employee is active - ID is not 0
 			while (currentEmployee.getEmployeeId() == 0) {
 				// get byte start in file for next record
 				currentByteStart = application.getNext(currentByteStart);
 				// assign current Employee to next record in file
-				currentEmployee = application.readRecords(currentByteStart);
+				readRecords();
 			} // end while
 			application.closeReadFile();// close file for reading
 		} // end if
@@ -422,11 +430,11 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// if any active record in file look for first record
 		if (isSomeoneToDisplay()) {
 			// open file for reading
-			application.openReadFile(file.getAbsolutePath());
+			openfile();
 			// get byte start in file for last record
 			currentByteStart = application.getLast();
 			// assign current Employee to first record in file
-			currentEmployee = application.readRecords(currentByteStart);
+			readRecords();
 			application.closeReadFile();// close file for reading
 			// if last record is inactive look for previous record
 			if (currentEmployee.getEmployeeId() == 0)
@@ -654,11 +662,16 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		boolean ppsExist = false;
 		// check for correct PPS format based on assignment description
 		if (pps.length() == 8 || pps.length() == 9) {
-			if (Character.isDigit(pps.charAt(0)) && Character.isDigit(pps.charAt(1))
-					&& Character.isDigit(pps.charAt(2))	&& Character.isDigit(pps.charAt(3)) 
-					&& Character.isDigit(pps.charAt(4))	&& Character.isDigit(pps.charAt(5)) 
-					&& Character.isDigit(pps.charAt(6))	&& Character.isLetter(pps.charAt(7))
-					&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
+			if (
+					Character.isDigit(pps.charAt(0)) && 
+					Character.isDigit(pps.charAt(1)) && 
+					Character.isDigit(pps.charAt(2)) && 
+					Character.isDigit(pps.charAt(3)) && 
+					Character.isDigit(pps.charAt(4)) && 
+					Character.isDigit(pps.charAt(5)) && 
+					Character.isDigit(pps.charAt(6)) && 
+					
+					Character.isLetter(pps.charAt(7))&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
 				// open file for reading
 				application.openReadFile(file.getAbsolutePath());
 				// look in file is PPS already in use
@@ -779,10 +792,10 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 			search = false;
 		else
 			search = true;
-		ppsField.setEditable(booleanValue);
-		surnameField.setEditable(booleanValue);
-		firstNameField.setEditable(booleanValue);
-		genderCombo.setEnabled(booleanValue);
+		ppsField.setEditable(!booleanValue);
+		surnameField.setEditable(!booleanValue);
+		firstNameField.setEditable(!booleanValue);
+		genderCombo.setEnabled(!booleanValue);
 		departmentCombo.setEnabled(booleanValue);
 		salaryField.setEditable(booleanValue);
 		fullTimeCombo.setEnabled(booleanValue);
