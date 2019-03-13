@@ -237,12 +237,15 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 		empDetails.add(new JLabel("PPS Number:"), "growx, pushx");
 		empDetails.add(ppsField = new JTextField(20), "growx, pushx, wrap");
+		ppsField.setEditable(false);
 
 		empDetails.add(new JLabel("Surname:"), "growx, pushx");
 		empDetails.add(surnameField = new JTextField(20), "growx, pushx, wrap");
+		surnameField.setEditable(false);
 
 		empDetails.add(new JLabel("First Name:"), "growx, pushx");
 		empDetails.add(firstNameField = new JTextField(20), "growx, pushx, wrap");
+		firstNameField.setEditable(false);
 
 		empDetails.add(new JLabel("Gender:"), "growx, pushx");
 		empDetails.add(genderCombo = new JComboBox<String>(gender), "growx, pushx, wrap");
@@ -305,8 +308,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchBySurnameField.setText("");
 		// if Employee is null or ID is 0 do nothing else display Employee
 		// details
-		if (thisEmployee == null) {
-		} else if (thisEmployee.getEmployeeId() == 0) {
+		if (thisEmployee == null || thisEmployee.getEmployeeId() == 0) {
+	
 		} else {
 			// find corresponding gender combo box value to current employee
 			while (!found && countGender < gender.length - 1) {
@@ -325,9 +328,13 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 			} // end while
 			idField.setText(Integer.toString(thisEmployee.getEmployeeId()));
 			ppsField.setText(thisEmployee.getPps().trim());
+			ppsField.setEditable(false);
 			surnameField.setText(thisEmployee.getSurname().trim());
+			surnameField.setEditable(false);
 			firstNameField.setText(thisEmployee.getFirstName());
+			firstNameField.setEditable(false);
 			genderCombo.setSelectedIndex(countGender);
+			genderCombo.setEditable(false);
 			departmentCombo.setSelectedIndex(countDep);
 			salaryField.setText(format.format(thisEmployee.getSalary()));
 			// set corresponding full time combo box value to current employee
@@ -671,7 +678,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 					Character.isDigit(pps.charAt(5)) && 
 					Character.isDigit(pps.charAt(6)) && 
 					
-					Character.isLetter(pps.charAt(7))&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
+					Character.isLetter(pps.charAt(7))&& (pps.length() == 8 || Character.isLetter(pps.charAt(8))))
+			{
 				// open file for reading
 				application.openReadFile(file.getAbsolutePath());
 				// look in file is PPS already in use
@@ -768,22 +776,22 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		if (!valid)
 			JOptionPane.showMessageDialog(null, "Wrong values or format! Please check!");
 		// set text field to white colour if text fields are editable
-		if (ppsField.isEditable())
-			setToWhite();
+		//if (ppsField.isEditable())
+			//setToWhite();
 
 		return valid;
 	}
 
 	// set text field background colour to white
-	private void setToWhite() {
-		ppsField.setBackground(UIManager.getColor("TextField.background"));
-		surnameField.setBackground(UIManager.getColor("TextField.background"));
-		firstNameField.setBackground(UIManager.getColor("TextField.background"));
-		salaryField.setBackground(UIManager.getColor("TextField.background"));
-		genderCombo.setBackground(UIManager.getColor("TextField.background"));
-		departmentCombo.setBackground(UIManager.getColor("TextField.background"));
-		fullTimeCombo.setBackground(UIManager.getColor("TextField.background"));
-	}// end setToWhite
+//	private void setToWhite() {
+//		ppsField.setBackground(UIManager.getColor("TextField.background"));
+//		surnameField.setBackground(UIManager.getColor("TextField.background"));
+//		firstNameField.setBackground(UIManager.getColor("TextField.background"));
+//		salaryField.setBackground(UIManager.getColor("TextField.background"));
+//		genderCombo.setBackground(UIManager.getColor("TextField.background"));
+//		departmentCombo.setBackground(UIManager.getColor("TextField.background"));
+//		fullTimeCombo.setBackground(UIManager.getColor("TextField.background"));
+//	}// end setToWhite
 
 	// enable text fields for editing
 	public void setEnabled(boolean booleanValue) {
@@ -993,74 +1001,82 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// create file
 		application.createFile(file.getName());
 	}// end createRandomFile
+	
+	public boolean checkInputnoChanges(){
+		boolean answer = false;
+		if (checkInput() && !checkForChanges())
+			return true;
+			return answer;
+			
+	}
 
 	// action listener for buttons, text field and menu items
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == closeApp) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				exitApp();
 		} else if (e.getSource() == open) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				openFile();
 		} else if (e.getSource() == save) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				saveFile();
 			change = false;
 		} else if (e.getSource() == saveAs) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				saveFileAs();
 			change = false;
 		} else if (e.getSource() == searchById) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				displaySearchByIdDialog();
 		} else if (e.getSource() == searchBySurname) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				displaySearchBySurnameDialog();
 		} else if (e.getSource() == searchId || e.getSource() == searchByIdField)
 			searchEmployeeById();
 		else if (e.getSource() == searchSurname || e.getSource() == searchBySurnameField)
 			searchEmployeeBySurname();
 		else if (e.getSource() == saveChange) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				;
 		} else if (e.getSource() == cancelChange)
 			cancelChange();
 		else if (e.getSource() == firstItem || e.getSource() == first) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				firstRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == prevItem || e.getSource() == previous) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges();{
 				previousRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == nextItem || e.getSource() == next) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				nextRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == lastItem || e.getSource() == last) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				lastRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == listAll || e.getSource() == displayAll) {
-			if (checkInput() && !checkForChanges())
+					checkInputnoChanges();
 				if (isSomeoneToDisplay())
 					displayEmployeeSummaryDialog();
 		} else if (e.getSource() == create || e.getSource() == add) {
-			if (checkInput() && !checkForChanges())
+					checkInputnoChanges();
 				new AddRecordDialog(EmployeeDetails.this);
 		} else if (e.getSource() == modify || e.getSource() == edit) {
 			if (checkInput() && !checkForChanges())
 				editDetails();
 		} else if (e.getSource() == delete || e.getSource() == deleteButton) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				deleteRecord();
 		} else if (e.getSource() == searchBySurname) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				new SearchBySurnameDialog(EmployeeDetails.this);
 		}
 	}// end actionPerformed
