@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 public class RandomFile {
 	private RandomAccessFile output;
 	private RandomAccessFile input;
+	
+	String error [] = {"Error processing file!","Error closing file!","File does not exist!","Error writing to file!","File is not suported!"};
 
 	// Create new file
 	public void createFile(String fileName) {
@@ -25,7 +27,7 @@ public class RandomFile {
 
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error processing file!");
+			JOptionPane.showMessageDialog(null, error[0]);
 			System.exit(1);
 		} // end catch
 
@@ -35,7 +37,7 @@ public class RandomFile {
 					file.close(); // close file
 			} // end try
 			catch (IOException ioException) {
-				JOptionPane.showMessageDialog(null, "Error closing file!");
+				JOptionPane.showMessageDialog(null, error[1]);
 				System.exit(1);
 			} // end catch
 		} // end finally
@@ -48,7 +50,7 @@ public class RandomFile {
 			output = new RandomAccessFile(fileName, "rw");
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "File does not exist!");
+			JOptionPane.showMessageDialog(null, error[2]);
 		} // end catch
 	} // end method openFile
 
@@ -60,7 +62,7 @@ public class RandomFile {
 				output.close();
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error closing file!");
+			JOptionPane.showMessageDialog(null, error[1]);
 			System.exit(1);
 		} // end catch
 	} // end closeFile
@@ -84,7 +86,7 @@ public class RandomFile {
 			currentRecordStart = output.length();
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error writing to file!");
+			JOptionPane.showMessageDialog(null, error[3]);
 		} // end catch
 
 		return currentRecordStart - RandomAccessEmployeeRecord.SIZE;// Return
@@ -111,7 +113,7 @@ public class RandomFile {
 			record.write(output);// Write object to file
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error writing to file!");
+			JOptionPane.showMessageDialog(null, error[3]);
 		} // end catch
 	}// end changeRecors
 
@@ -130,7 +132,7 @@ public class RandomFile {
 			record.write(output);// Replace existing object with empty object
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error writing to file!");
+			JOptionPane.showMessageDialog(null, error[3]);
 		} // end catch
 	}// end deleteRecords
 
@@ -141,7 +143,7 @@ public class RandomFile {
 			input = new RandomAccessFile(fileName, "r");
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "File is not suported!");
+			JOptionPane.showMessageDialog(null, error[4]);
 		} // end catch
 	} // end method openFile
 
@@ -153,7 +155,7 @@ public class RandomFile {
 				input.close();
 		} // end try
 		catch (IOException ioException) {
-			JOptionPane.showMessageDialog(null, "Error closing file!");
+			JOptionPane.showMessageDialog(null, error[1]);
 			System.exit(1);
 		} // end catch
 	} // end method closeFile

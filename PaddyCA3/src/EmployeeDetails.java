@@ -85,24 +85,24 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	String[] department = { "", "Administration", "Production", "Transport", "Management" };
 	// full time combo box values
 	String[] fullTime = { "", "Yes", "No" };
+	
+	AddRecordDialog addRecordDialog;
 
 	// initialize menu bar
 	private JMenuBar menuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		JMenu fileMenu, recordMenu, navigateMenu, closeMenu;
+		JMenu fileMenu,closeMenu;
 
 		fileMenu = new JMenu("File");
 		fileMenu.setMnemonic(KeyEvent.VK_F);
-		recordMenu = new JMenu("Records");
-		recordMenu.setMnemonic(KeyEvent.VK_R);
-		navigateMenu = new JMenu("Navigate");
-		navigateMenu.setMnemonic(KeyEvent.VK_N);
+		
+		
 		closeMenu = new JMenu("Exit");
 		closeMenu.setMnemonic(KeyEvent.VK_E);
 
 		menuBar.add(fileMenu);
-		menuBar.add(recordMenu);
-		menuBar.add(navigateMenu);
+		
+		
 		menuBar.add(closeMenu);
 
 		fileMenu.add(open = new JMenuItem("Open")).addActionListener(this);
@@ -115,26 +115,9 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		saveAs.setMnemonic(KeyEvent.VK_F2);
 		saveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, ActionEvent.CTRL_MASK));
 
-		recordMenu.add(create = new JMenuItem("Create new Record")).addActionListener(this);
-		create.setMnemonic(KeyEvent.VK_N);
-		create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-		recordMenu.add(modify = new JMenuItem("Modify Record")).addActionListener(this);
-		modify.setMnemonic(KeyEvent.VK_E);
-		modify.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-		recordMenu.add(delete = new JMenuItem("Delete Record")).addActionListener(this);
+		
 
-		navigateMenu.add(firstItem = new JMenuItem("First"));
-		firstItem.addActionListener(this);
-		navigateMenu.add(prevItem = new JMenuItem("Previous"));
-		prevItem.addActionListener(this);
-		navigateMenu.add(nextItem = new JMenuItem("Next"));
-		nextItem.addActionListener(this);
-		navigateMenu.add(lastItem = new JMenuItem("Last"));
-		lastItem.addActionListener(this);
-		navigateMenu.addSeparator();
-		navigateMenu.add(searchById = new JMenuItem("Search by ID")).addActionListener(this);
-		navigateMenu.add(searchBySurname = new JMenuItem("Search by Surname")).addActionListener(this);
-		navigateMenu.add(listAll = new JMenuItem("List all Records")).addActionListener(this);
+		
 
 		closeMenu.add(closeApp = new JMenuItem("Close")).addActionListener(this);
 		closeApp.setMnemonic(KeyEvent.VK_F4);
@@ -142,30 +125,40 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 		return menuBar;
 	}// end menuBar
+	
+	
+	public String migLayout2() {
+		return "growx, pushx";
+	}
+	
+	public String migLayout3() {
+		return "growx, pushx, wrap";
+	}
+	
 
 	// initialize search panel
 	private JPanel searchPanel() {
 		JPanel searchPanel = new JPanel(new MigLayout());
 
 		searchPanel.setBorder(BorderFactory.createTitledBorder("Search"));
-		searchPanel.add(new JLabel("Search by ID:"), "growx, pushx");
-		searchPanel.add(searchByIdField = new JTextField(20), "width 200:200:200, growx, pushx");
+		searchPanel.add(new JLabel("Search by ID:"), migLayout2());
+		searchPanel.add(searchByIdField = new JTextField(20), "width 200:200:200," +migLayout2());
 		searchByIdField.addActionListener(this);
 		searchByIdField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(searchId = new JButton(new ImageIcon(
 				new ImageIcon("image/search.png").getImage().getScaledInstance(35, 20, java.awt.Image.SCALE_SMOOTH))),
-				"width 35:35:35, height 20:20:20, growx, pushx, wrap");
+				"width 35:35:35, height 20:20:20,"+migLayout3());
 		searchId.addActionListener(this);
 		searchId.setToolTipText("Search Employee By ID");
 
-		searchPanel.add(new JLabel("Search by Surname:"), "growx, pushx");
-		searchPanel.add(searchBySurnameField = new JTextField(20), "width 200:200:200, growx, pushx");
+		searchPanel.add(new JLabel("Search by Surname:"), migLayout2());
+		searchPanel.add(searchBySurnameField = new JTextField(20), "width 200:200:200,"+migLayout2());
 		searchBySurnameField.addActionListener(this);
 		searchBySurnameField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(
 				searchSurname = new JButton(new ImageIcon(new ImageIcon("image/search.png").getImage()
 						.getScaledInstance(35, 20, java.awt.Image.SCALE_SMOOTH))),
-				"width 35:35:35, height 20:20:20, growx, pushx, wrap");
+				"width 35:35:35, height 20:20:20,"+migLayout3());
 		searchSurname.addActionListener(this);
 		searchSurname.setToolTipText("Search Employee By Surname");
 
@@ -207,16 +200,16 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	private JPanel buttonPanel() {
 		JPanel buttonPanel = new JPanel();
 
-		buttonPanel.add(add = new JButton("Add Record"), "growx, pushx");
+		buttonPanel.add(add = new JButton("Add Record"), migLayout2());
 		add.addActionListener(this);
 		add.setToolTipText("Add new Employee Record");
-		buttonPanel.add(edit = new JButton("Edit Record"), "growx, pushx");
+		buttonPanel.add(edit = new JButton("Edit Record"), migLayout2());
 		edit.addActionListener(this);
 		edit.setToolTipText("Edit current Employee");
-		buttonPanel.add(deleteButton = new JButton("Delete Record"), "growx, pushx, wrap");
+		buttonPanel.add(deleteButton = new JButton("Delete Record"), migLayout3());
 		deleteButton.addActionListener(this);
 		deleteButton.setToolTipText("Delete current Employee");
-		buttonPanel.add(displayAll = new JButton("List all Records"), "growx, pushx");
+		buttonPanel.add(displayAll = new JButton("List all Records"),  migLayout2());
 		displayAll.addActionListener(this);
 		displayAll.setToolTipText("List all Registered Employees");
 
@@ -231,30 +224,33 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 		empDetails.setBorder(BorderFactory.createTitledBorder("Employee Details"));
 
-		empDetails.add(new JLabel("ID:"), "growx, pushx");
-		empDetails.add(idField = new JTextField(20), "growx, pushx, wrap");
+		empDetails.add(new JLabel("ID:"), migLayout2());
+		empDetails.add(idField = new JTextField(20), migLayout3());
 		idField.setEditable(false);
 
-		empDetails.add(new JLabel("PPS Number:"), "growx, pushx");
-		empDetails.add(ppsField = new JTextField(20), "growx, pushx, wrap");
+		empDetails.add(new JLabel("PPS Number:"), migLayout2());
+		empDetails.add(ppsField = new JTextField(20), migLayout3());
+		ppsField.setEditable(false);
 
-		empDetails.add(new JLabel("Surname:"), "growx, pushx");
-		empDetails.add(surnameField = new JTextField(20), "growx, pushx, wrap");
+		empDetails.add(new JLabel("Surname:"), migLayout2());
+		empDetails.add(surnameField = new JTextField(20), migLayout3());
+		surnameField.setEditable(false);
 
-		empDetails.add(new JLabel("First Name:"), "growx, pushx");
-		empDetails.add(firstNameField = new JTextField(20), "growx, pushx, wrap");
+		empDetails.add(new JLabel("First Name:"), migLayout2());
+		empDetails.add(firstNameField = new JTextField(20), migLayout3());
+		firstNameField.setEditable(false);
 
-		empDetails.add(new JLabel("Gender:"), "growx, pushx");
-		empDetails.add(genderCombo = new JComboBox<String>(gender), "growx, pushx, wrap");
+		empDetails.add(new JLabel("Gender:"), migLayout2());
+		empDetails.add(genderCombo = new JComboBox<String>(gender), migLayout3());
 
-		empDetails.add(new JLabel("Department:"), "growx, pushx");
-		empDetails.add(departmentCombo = new JComboBox<String>(department), "growx, pushx, wrap");
+		empDetails.add(new JLabel("Department:"), migLayout2());
+		empDetails.add(departmentCombo = new JComboBox<String>(department),  migLayout3());
 
-		empDetails.add(new JLabel("Salary:"), "growx, pushx");
-		empDetails.add(salaryField = new JTextField(20), "growx, pushx, wrap");
+		empDetails.add(new JLabel("Salary:"), migLayout2());
+		empDetails.add(salaryField = new JTextField(20), migLayout3());
 
-		empDetails.add(new JLabel("Full Time:"), "growx, pushx");
-		empDetails.add(fullTimeCombo = new JComboBox<String>(fullTime), "growx, pushx, wrap");
+		empDetails.add(new JLabel("Full Time:"), migLayout2());
+		empDetails.add(fullTimeCombo = new JComboBox<String>(fullTime), migLayout3());
 
 		buttonPanel.add(saveChange = new JButton("Save"));
 		saveChange.addActionListener(this);
@@ -265,7 +261,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		cancelChange.setVisible(false);
 		cancelChange.setToolTipText("Cancel edit");
 
-		empDetails.add(buttonPanel, "span 2,growx, pushx,wrap");
+		empDetails.add(buttonPanel, "span 2,"+ migLayout3());
 
 		// loop through panel components and add listeners and format
 		for (int i = 0; i < empDetails.getComponentCount(); i++) {
@@ -305,8 +301,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchBySurnameField.setText("");
 		// if Employee is null or ID is 0 do nothing else display Employee
 		// details
-		if (thisEmployee == null) {
-		} else if (thisEmployee.getEmployeeId() == 0) {
+		if (thisEmployee == null || thisEmployee.getEmployeeId() == 0) {
+	
 		} else {
 			// find corresponding gender combo box value to current employee
 			while (!found && countGender < gender.length - 1) {
@@ -325,9 +321,13 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 			} // end while
 			idField.setText(Integer.toString(thisEmployee.getEmployeeId()));
 			ppsField.setText(thisEmployee.getPps().trim());
+			ppsField.setEditable(false);
 			surnameField.setText(thisEmployee.getSurname().trim());
+			surnameField.setEditable(false);
 			firstNameField.setText(thisEmployee.getFirstName());
+			firstNameField.setEditable(false);
 			genderCombo.setSelectedIndex(countGender);
+			genderCombo.setEditable(false);
 			departmentCombo.setSelectedIndex(countDep);
 			salaryField.setText(format.format(thisEmployee.getSalary()));
 			// set corresponding full time combo box value to current employee
@@ -663,6 +663,9 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// check for correct PPS format based on assignment description
 		if (pps.length() == 8 || pps.length() == 9) {
 			if (
+					
+					
+					
 					Character.isDigit(pps.charAt(0)) && 
 					Character.isDigit(pps.charAt(1)) && 
 					Character.isDigit(pps.charAt(2)) && 
@@ -671,7 +674,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 					Character.isDigit(pps.charAt(5)) && 
 					Character.isDigit(pps.charAt(6)) && 
 					
-					Character.isLetter(pps.charAt(7))&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
+					Character.isLetter(pps.charAt(7))&& (pps.length() == 8 || Character.isLetter(pps.charAt(8))))
+			{
 				// open file for reading
 				application.openReadFile(file.getAbsolutePath());
 				// look in file is PPS already in use
@@ -768,22 +772,22 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		if (!valid)
 			JOptionPane.showMessageDialog(null, "Wrong values or format! Please check!");
 		// set text field to white colour if text fields are editable
-		if (ppsField.isEditable())
-			setToWhite();
+		//if (ppsField.isEditable())
+			//setToWhite();
 
 		return valid;
 	}
 
 	// set text field background colour to white
-	private void setToWhite() {
-		ppsField.setBackground(UIManager.getColor("TextField.background"));
-		surnameField.setBackground(UIManager.getColor("TextField.background"));
-		firstNameField.setBackground(UIManager.getColor("TextField.background"));
-		salaryField.setBackground(UIManager.getColor("TextField.background"));
-		genderCombo.setBackground(UIManager.getColor("TextField.background"));
-		departmentCombo.setBackground(UIManager.getColor("TextField.background"));
-		fullTimeCombo.setBackground(UIManager.getColor("TextField.background"));
-	}// end setToWhite
+//	private void setToWhite() {
+//		ppsField.setBackground(UIManager.getColor("TextField.background"));
+//		surnameField.setBackground(UIManager.getColor("TextField.background"));
+//		firstNameField.setBackground(UIManager.getColor("TextField.background"));
+//		salaryField.setBackground(UIManager.getColor("TextField.background"));
+//		genderCombo.setBackground(UIManager.getColor("TextField.background"));
+//		departmentCombo.setBackground(UIManager.getColor("TextField.background"));
+//		fullTimeCombo.setBackground(UIManager.getColor("TextField.background"));
+//	}// end setToWhite
 
 	// enable text fields for editing
 	public void setEnabled(boolean booleanValue) {
@@ -993,74 +997,82 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// create file
 		application.createFile(file.getName());
 	}// end createRandomFile
+	
+	public boolean checkInputnoChanges(){
+		boolean answer = false;
+		if (checkInput() && !checkForChanges())
+			return true;
+			return answer;
+			
+	}
 
 	// action listener for buttons, text field and menu items
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == closeApp) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				exitApp();
 		} else if (e.getSource() == open) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				openFile();
 		} else if (e.getSource() == save) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				saveFile();
 			change = false;
 		} else if (e.getSource() == saveAs) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				saveFileAs();
 			change = false;
 		} else if (e.getSource() == searchById) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				displaySearchByIdDialog();
 		} else if (e.getSource() == searchBySurname) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				displaySearchBySurnameDialog();
 		} else if (e.getSource() == searchId || e.getSource() == searchByIdField)
 			searchEmployeeById();
 		else if (e.getSource() == searchSurname || e.getSource() == searchBySurnameField)
 			searchEmployeeBySurname();
 		else if (e.getSource() == saveChange) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				;
 		} else if (e.getSource() == cancelChange)
 			cancelChange();
 		else if (e.getSource() == firstItem || e.getSource() == first) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				firstRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == prevItem || e.getSource() == previous) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges();{
 				previousRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == nextItem || e.getSource() == next) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				nextRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == lastItem || e.getSource() == last) {
-			if (checkInput() && !checkForChanges()) {
+				checkInputnoChanges(); {
 				lastRecord();
 				displayRecords(currentEmployee);
 			}
 		} else if (e.getSource() == listAll || e.getSource() == displayAll) {
-			if (checkInput() && !checkForChanges())
+					checkInputnoChanges();
 				if (isSomeoneToDisplay())
 					displayEmployeeSummaryDialog();
 		} else if (e.getSource() == create || e.getSource() == add) {
-			if (checkInput() && !checkForChanges())
+					checkInputnoChanges();
 				new AddRecordDialog(EmployeeDetails.this);
 		} else if (e.getSource() == modify || e.getSource() == edit) {
 			if (checkInput() && !checkForChanges())
 				editDetails();
 		} else if (e.getSource() == delete || e.getSource() == deleteButton) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				deleteRecord();
 		} else if (e.getSource() == searchBySurname) {
-			if (checkInput() && !checkForChanges())
+				checkInputnoChanges();
 				new SearchBySurnameDialog(EmployeeDetails.this);
 		}
 	}// end actionPerformed
