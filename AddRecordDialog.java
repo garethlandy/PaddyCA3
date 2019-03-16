@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ public class AddRecordDialog extends JDialog implements ActionListener {
 	JComboBox<String> genderCombo, departmentCombo, fullTimeCombo;
 	JButton save, cancel;
 	EmployeeDetails parent;
+	CheckInput ci = new CheckInput();
 	// constructor for add record dialog
 	public AddRecordDialog(EmployeeDetails parent) {
 		setTitle("Add Record");
@@ -132,52 +134,28 @@ public class AddRecordDialog extends JDialog implements ActionListener {
 		this.parent.addRecord(theEmployee);
 		this.parent.displayRecords(theEmployee);
 	}
+	
+	
 
 	// check for input in text fields
 	public boolean checkInput() {
-		boolean valid = true;
-		// if any of inputs are in wrong format, colour text field and display message
-		if (ppsField.getText().equals("")) {
-			ppsField.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		if (this.parent.correctPps(this.ppsField.getText().trim(), -1)) {
-			ppsField.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		if (surnameField.getText().isEmpty()) {
-			surnameField.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		if (firstNameField.getText().isEmpty()) {
-			firstNameField.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		if (genderCombo.getSelectedIndex() == 0) {
-			genderCombo.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		if (departmentCombo.getSelectedIndex() == 0) {
-			departmentCombo.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		try {// try to get values from text field
-			Double.parseDouble(salaryField.getText());
-			// check if salary is greater than 0
-			if (Double.parseDouble(salaryField.getText()) < 0) {
-				salaryField.setBackground(Colours.COLOUR_RED);
-				valid = false;
-			}// end if
-		}// end try
-		catch (NumberFormatException num) {
-			salaryField.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end catch
-		if (fullTimeCombo.getSelectedIndex() == 0) {
-			fullTimeCombo.setBackground(Colours.COLOUR_RED);
-			valid = false;
-		}// end if
-		return valid;
+		
+		boolean check = ci.checkUserInput(
+				ppsField, 
+				surnameField, 
+				firstNameField, 
+				genderCombo, 
+				departmentCombo, 
+				salaryField, 
+				fullTimeCombo, 
+				1,
+				this.parent.getApplication(), 
+				this.parent.getFile()
+				);
+		
+		
+
+		return check;
 	}// end checkInput
 
 	// set text field to white colour
