@@ -22,15 +22,15 @@ public class SearchByDialog extends JDialog implements ActionListener {
 	JTextField searchField;
 	
 	String dialog = "";
+	String type="";
 	
 	
-	public SearchByDialog(EmployeeDetails parent) {
-	
+	public SearchByDialog(EmployeeDetails parent,String type) {
+		this.type=type;
+		setTitle(type);
 		setModal(true);
 		this.parent = parent;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
-		
-		//this.dialog = id;
 		
 		JScrollPane scrollPane = new JScrollPane(searchPane());
 		setContentPane(scrollPane);
@@ -39,6 +39,7 @@ public class SearchByDialog extends JDialog implements ActionListener {
 		setSize(500, 190);
 		setLocation(350, 250);
 		setVisible(true);		
+	
 	}
 	
 
@@ -74,18 +75,7 @@ public class SearchByDialog extends JDialog implements ActionListener {
 	
 	
 	// action listener for save and cancel button
-		public void actionPerformed(ActionEvent e) {
-			// if option search, search for Employee
-			if(e.getSource() == search){
-				this.parent.searchBySurnameField.setText(searchField.getText());
-				// search Employee by surname
-				this.parent.searchEmployeeBySurname();
-				dispose();// dispose dialog
-			}// end if
-			// else dispose dialog
-			else if(e.getSource() == cancel)
-				dispose();// dispose dialog
-		}// end actionPerformed
+	
 
 
 	public String getDialog() {
@@ -95,6 +85,42 @@ public class SearchByDialog extends JDialog implements ActionListener {
 	public void setDialog(String dialog) {
 		this.dialog = dialog;
 	}
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	
+		if (e.getSource() == search  && type.equals("ID")) {
+			
+			System.out.println("ENTER "+e.getSource().toString());
+			try {
+				Double.parseDouble(searchField.getText());
+				this.parent.searchByIdField.setText(searchField.getText());
+				
+				this.parent.searchEmployeeById();
+				dispose();
+			}
+			catch (NumberFormatException num) {
+				// display message and set colour to text field if entry is wrong
+				searchField.setBackground(Colours.COLOUR_RED); //RED
+				JOptionPane.showMessageDialog(null, "Wrong ID format!");
+			}// end catch
+		}// end if
+		else if(e.getSource() == search && type.equals("Surname")){
+			this.parent.searchBySurnameField.setText(searchField.getText());
+			// search Employee by surname
+			this.parent.searchEmployeeBySurname();
+			dispose();// dispose dialog
+		}// end if
+		// else dispose dialog
+		else if(e.getSource() == cancel)
+			dispose();// dispose dialog
+	}
+
+
+
+	
 	
 	}
 	
